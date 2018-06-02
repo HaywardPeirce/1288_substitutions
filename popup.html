@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/bootstrap.min.js"></script>
+  <style>
+    body {
+      min-width: 300px;
+      font-size: 15px;
+    }
+    input {
+      margin: 5px;
+      outline: none;
+    }
+    .text_input {
+      width: 100%;
+    }
+
+  </style>
+</head>
+
+<body>
+<script src="popup.js"></script>
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#subsContent">Substitutions</a></li>
+    <li><a data-toggle="tab" href="#domainsContent">Domains</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="subsContent" class="tab-pane fade in active">
+      <form id="substitutionsForm">
+        <div id="defaultSubs"></div>
+        <div id="userSubs"></div>
+        <input type="submit">
+      </form>
+    </div>
+    <div id="domainsContent" class="tab-pane fade">
+      <form id="domainForm">
+        <div id="domainFormInputs"></div><button type="button" id="addDomain">Add domain</button>
+        <input type="submit">
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "Substitutions",
+  "version": "0.0.1",
+  "description": "Substitute text in your browser to make reading the news more fun. Inspired by XKCD comic [1288](https://xkcd.com/1288/).",
+  "icons": {
+    "16": "images/subs16.png",
+    "48": "images/subs48.png",
+    "32": "images/subs32.png",
+    "128": "images/subs128.png"
+  },
+  "browser_action": {
+      "default_title": "Browser action.",
+      "default_icon": {
+        "16": "images/subs16.png",
+        "32": "images/subs32.png"
+        },
+      "default_popup": "popup.html"
+  },
+  "permissions": ["tabs","<all_urls>"],
+  "content_scripts": [
+      {
+        "matches": [
+            "http://*/*",
+            "https://*/*"
+            ],
+        "js": ["content.js"],
+        "run_at": "document_end"
+      }
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "manifest_version": 2
+}
