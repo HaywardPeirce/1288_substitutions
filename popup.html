@@ -9,7 +9,7 @@
   <script src="scripts/bootstrap.min.js"></script>
   <style>
     body {
-      min-width: 300px;
+      min-width: 400px;
       font-size: 15px;
     }
     input {
@@ -29,13 +29,15 @@
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#subsContent">Substitutions</a></li>
     <li><a data-toggle="tab" href="#domainsContent">Domains</a></li>
+    <li><a data-toggle="tab" href="#other">Other</a></li>
   </ul>
 
   <div class="tab-content">
     <div id="subsContent" class="tab-pane fade in active">
       <form id="substitutionsForm">
         <div id="defaultSubs"></div>
-        <div id="userSubs"></div>
+        <hr>
+        <div id="userSubs"></div><button type="button" id="addSub">Add Substitution</button>
         <input type="submit">
       </form>
     </div>
@@ -44,6 +46,13 @@
         <div id="domainFormInputs"></div><button type="button" id="addDomain">Add domain</button>
         <input type="submit">
       </form>
+    </div>
+    <div id="other" class="tab-pane fade">
+        Coming Soon...
+      <!-- form id="otherSettingsForm">
+        <input type="checkbox"> Enable debugging mode<br>
+        <input type="submit">
+    </form -->
     </div>
   </div>
 </div>

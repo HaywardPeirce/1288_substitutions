@@ -18,6 +18,8 @@ var substitutions = {
   "could not be reached for comment": " is guilty and everyone knows it"
 }
 
+//TODO: load a URL parsing library here
+
 chrome.runtime.sendMessage({getDomainList: true}, function(response) {
 
   domainListForInputs = response.domainList;
@@ -31,9 +33,9 @@ chrome.runtime.sendMessage({getDomainList: true}, function(response) {
     //TODO process href and domain from list so they can be properly compared
 
     //check if this domain matches the entry in the list
-    if (domainListForInputs[item] == location.href){
+    if (domainCheck(domainListForInputs[item], location.href)){
 
-      //TODO: get all elements on the page which contain text
+      //TODO: get all elements on the page which contain text (not just the top level)
       elements = document.querySelectorAll("h1, h2, h3, h4, h4, h5, p")
 
       //aString = "These permissions are required if your Chrome extension wants to interact with the code running on pages.";
@@ -104,3 +106,27 @@ chrome.runtime.sendMessage({getDomainList: true}, function(response) {
 
   }
 });
+
+function domainCheck(listEntry, pageURL){
+
+    // //run through each of the checks, if any of them fail return false, otherwise at the end return true
+    //
+    // //TODO: remove the protocols
+    // if (listEntry.includes("://")){
+    //     listEntry = listEntry.split("://")[1];
+    // }
+    // if (pageURL.includes("://")){
+    //     pageURL = pageURL.split("://")[1];
+    // }
+    //
+    // //TODO: remove parameters from href if not included in domain from addListener
+    // //TODO: what about strixes in URLs, how to treat them as wildcards
+    //
+    // else return true;
+
+    if (domainListForInputs[item] == location.href){
+        return true;
+    }
+    else return false;
+
+}

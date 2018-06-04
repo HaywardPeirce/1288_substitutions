@@ -1,164 +1,83 @@
-// var substitutions = {
-//   "witnesses": "these dudes I know",
-//   "allegedly": "kinda probably",
-//   "new study": "tumblr post",
-//   "rebuild": "avenge",
-//   "space": "spaaace",
-//   "google glass": "virtual boy",
-//   "smartphone": "Pokédex",
-//   "electic": "atomic",
-//   "senator": "elf-lord",
-//   "car": "cat",
-//   "election": "eating contest",
-//   "congressional leaders": "river spirits",
-//   "homeland security": "homestar runner",
-//   "could not be reached for comment": " is guilty and everyone knows it"
-// }
 
-// elementBody = ""
-//
-// for (var item in substitutions){
-//   elementBody = elementBody + substitutions[item] + "<br>";
-// }
-//
-// document.getElementById("substitutionList").innerHTML = elementBody;
-
-// var color = "red";
-// var changeColor = function(response, sender, sendResponse) {
-//   this.color = response.data;
-// };
-//
-// chrome.runtime.sendMessage({method: "getLocalStorage", key: "favColor"},
-//     changeColor.bind(this));
-
-
-// public getObjectChrome(){
-//   let myFoo=function(response){
-//     console.log(response);
-//     this.myObjectExtension = reponse;
-//   }
-//   chrome.runtime.sendMessage(extensionID, 'getObject' myFoo.bind(this));
-// }
-
-//var substitutionList;
 
 getSubstitutionList();
 
 getDomainList();
 
 
-
+//function for retreiving the latest list of word substitutions
 function getSubstitutionList(){
-  //var substitutionList;
 
-  // var setSubList = function(response, sender, sendResponse){
-    // console.log("inside setSubList ", response);
-    // this.substitutionList = response.substitutionList;
-    //
-    // console.log('the response inside was: ', substitutionList);
-    // console.log('the response inside1 was: ', this.substitutionList);
-    //
-    // substitutionList = this.substitutionList;
-    // console.log('the response inside2 was: ', substitutionList);
-    // return this.substitutionList;
-  //}
+    //reteive the list from the background script
+    chrome.runtime.sendMessage({getSubstitutionList: true}, function(response) {
 
-  //chrome.runtime.sendMessage({getSubstitutionList: true}, setSubList.bind(this));
+        //console.log('the response inside was: ', substitutionList);
+        defaultSubListForInputs = response.defaultSubstitutionList;
+        //console.log('defaultSubListForInputs: ', defaultSubListForInputs);
 
-  chrome.runtime.sendMessage({getSubstitutionList: true}, function(response) {
-
-    //console.log('the response inside was: ', substitutionList);
-    defaultSubListForInputs = response.defaultSubstitutionList;
-    //console.log('defaultSubListForInputs: ', defaultSubListForInputs);
-
-    userSubListForInputs = response.userSubstitutionList;
-    //console.log('userSubListForInputs: ', userSubListForInputs);
+        userSubListForInputs = response.userSubstitutionList;
+        //console.log('userSubListForInputs: ', userSubListForInputs);
 
 
-    //console.log("defaultSubListForInputs: ", defaultSubListForInputs)
-    //console.log("substitutionList after subListForInputs: ", substitutionList)
+        //console.log("defaultSubListForInputs: ", defaultSubListForInputs)
+        //console.log("substitutionList after subListForInputs: ", substitutionList)
 
-    var defaultSubstitutions = document.getElementById("defaultSubs");
+        var defaultSubstitutions = document.getElementById("defaultSubs");
 
-    for (var item in defaultSubListForInputs){
-      //console.log(defaultSubListForInputs[item])
-
-
-      //document.write(item,'<br>');
-      defaultSubstitutions.appendChild(makeRadioButton(defaultSubListForInputs[item].name, defaultSubListForInputs[item].value, defaultSubListForInputs[item].enabled));
-
-    }
-
-    //TODO add the submit button in here
-  });
-
-  // console.log('the response at the end was: ', substitutionList);
-  // console.log('the response at the end1 was: ', this.substitutionList);
-  // console.log('the response at the end2 was: ', setSubList);
-
-  // substitutionListBody = ""
-  //
-  // for (var item in response.substitutionList){
-  //   substitutionListBody = substitutionListBody + response.substitutionList[item] + "<br>";
-  // }
-  //
-  // document.getElementById("substitutionList2").innerHTML = substitutionListBody;
-  //return substitutionList;
-  //}
+        for (var item in defaultSubListForInputs){
+          //console.log(defaultSubListForInputs[item])
 
 
-  //return substitutionList;
+          //document.write(item,'<br>');
+          defaultSubstitutions.appendChild(makeRadioButton(defaultSubListForInputs[item].name, defaultSubListForInputs[item].value, defaultSubListForInputs[item].enabled));
+          linebreak = document.createElement("br");
+          defaultSubstitutions.appendChild(linebreak);
+        }
+
+        var userSubstitutions = document.getElementById("userSubs");
+
+        for (var item in userSubListForInputs){
+          //console.log(userSubListForInputs[item])
+
+          userSubstitutions.appendChild(makeRadioButton(userSubListForInputs[item].name, userSubListForInputs[item].value, userSubListForInputs[item].enabled));
+          linebreak = document.createElement("br");
+          userSubstitutions.appendChild(linebreak);
+        }
+    });
 }
 
 //get the list of domains that this extension should run on
 function getDomainList(){
 
-  chrome.runtime.sendMessage({getDomainList: true}, function(response) {
+    //retreive the list of domains that are to be run on from background.js
+    chrome.runtime.sendMessage({getDomainList: true}, function(response) {
 
-    //console.log('the response inside was: ', substitutionList);
-    domainListForInputs = response.domainList;
-    console.log('domainListForInputs: ', domainListForInputs);
+        //console.log('the response inside was: ', substitutionList);
+        domainListForInputs = response.domainList;
+        console.log('domainListForInputs: ', domainListForInputs);
 
-    //userSubListForInputs = response.userSubstitutionList;
-    //console.log('userSubListForInputs: ', userSubListForInputs);
+        //userSubListForInputs = response.userSubstitutionList;
+        //console.log('userSubListForInputs: ', userSubListForInputs);
+        //console.log("defaultSubListForInputs: ", defaultSubListForInputs)
+        //console.log("substitutionList after subListForInputs: ", substitutionList)
 
+        //loop through each of the entries in the list of domains to run on
+        for (var item in domainListForInputs){
+            //console.log(domainListForInputs[item])
 
-    //console.log("defaultSubListForInputs: ", defaultSubListForInputs)
-    //console.log("substitutionList after subListForInputs: ", substitutionList)
-
-    //var domainList = document.getElementById("domainFormInputs");
-
-    for (var item in domainListForInputs){
-      //console.log(domainListForInputs[item])
-
-      appendFormField("domainFormInputs", domainListForInputs[item])
-
-      // domainList.appendChild(makeTextInput(domainListForInputs[item]));
-      // linebreak = document.createElement("br");
-      // domainList.appendChild(linebreak);
-
-    }
-  });
+            appendFormField("domainFormInputs", domainListForInputs[item])
+        }
+    });
 }
 
-// function createRadioElement(name, checked) {
-//     var radioHtml = '<input type="radio" name="' + name + '"';
-//     if ( checked ) {
-//         radioHtml += ' checked="checked"';
-//     }
-//     radioHtml += '/>';
-//
-//     var radioFragment = document.createElement('div');
-//     radioFragment.innerHTML = radioHtml;
-//
-//     return radioFragment.firstChild;
-// }
-
+//function for creating a text input, accepts an optional value for the new next input
+//TODO: maybe support accepting placeholder text
 function makeTextInput(value = null){
   var input = document.createElement("input");
 
   input.type = "text";
-  input.class = "text_input"
+  //input.class = "text_input"
+  input.classList.add("text_input");
   if (value){
     input.value = value;
   }
@@ -166,48 +85,44 @@ function makeTextInput(value = null){
   return input;
 }
 
+//function for creating a adding a new form field at the end of a given element `elementId`
 function appendFormField(elementId, value = null){
 
-  //console.log(elementId);
-  element = document.getElementById(elementId);
-  //console.log(element);
+    //console.log(elementId);
+    element = document.getElementById(elementId);
+    //console.log(element);
 
-  element.appendChild(makeTextInput(value));
-  linebreak = document.createElement("br");
-  //console.log(element);
-  element.appendChild(linebreak);
-  //console.log(element);
+    element.appendChild(makeTextInput(value));
+    linebreak = document.createElement("br");
+    //console.log(element);
+    element.appendChild(linebreak);
+    //console.log(element);
 
 }
 
 function appendBlankFormField() {
-  appendFormField("domainFormInputs");
+    appendFormField("domainFormInputs");
 }
 
-
+//function used to create a new radio button
 function makeRadioButton(name, value, enabled) {
 
-    //TOOD: should these be included in a label? should they also be included in a default subs group?
     var label = document.createElement("label");
     var radio = document.createElement("input");
     radio.type = "checkbox";
     radio.name = name;
     radio.value = value;
 
+    radio.classList.add("checkbox_input");
+
     //if this is not a default sub entry that has been turned off, set the input as checked
     if (enabled){
       radio.checked = true;
     }
 
-    linebreak = document.createElement("br");
-
     label.appendChild(radio);
 
     label.appendChild(document.createTextNode(name + " --> " + value));
-
-    label.appendChild(linebreak);
-
-
 
     //console.log('radio: ',radio);
     //console.log('label: ', label);
@@ -215,222 +130,209 @@ function makeRadioButton(name, value, enabled) {
     return label;
 }
 
+//function for creating the form a user can fill out to add another substitition to the list
+function makeNewSub(){
 
+    var userSubsForm = document.getElementById("userSubs");
 
-// function saveSubstitutions(list){
-//   chrome.runtime.sendMessage({saveSubstitutionList: list}, function(response) {
-//     console.log('the response was: ', response);
-//     //return response
-//   });
-// }
-//
-//document.getElementById("substitutionsForm").onsubmit = function() {submitSubstitutions()};
-window.onload=function(){
-  var substutionsForm = document.getElementById("substitutionsForm");
-  substutionsForm.addEventListener("submit", submitSubstitutions);
+    var span = document.createElement("span");
 
-  var domainForm = document.getElementById("domainForm");
-  console.log('domainForm: ', domainForm);
-  domainForm.addEventListener("submit", submitDomains);
+    var newSubName = document.createElement("input");
 
-  var addDomain = document.getElementById("addDomain");
-  addDomain.addEventListener("click", appendBlankFormField);
+    newSubName.type = "text";
+    newSubName.classList.add("newSubTextInput");
+    newSubName.name = "newSubName";
 
-  // var subsTab = document.getElementById("subsTab");
-  // console.log("here1");
-  // subsTab.addEventListener("click", openTab);
-  //
-  // var domainsTab = document.getElementById("domainsTab");
-  // console.log("here2");
-  // domainsTab.addEventListener("click", openTab);
+    var newSubValue = document.createElement("input");
 
-  // var whichTab = document.getElementsByClassName("tablink");
-  // for (i = 0; i < whichTab.length; i++) {
-  //   whichTab[i].addEventListener("click", openTab(whichTab[i]));
-  // }
+    newSubValue.type = "text";
+    newSubValue.classList.add("text_input");
+    newSubValue.name = "newSubValue";
 
+    span.appendChild(newSubName);
 
-    // var mb = document.getElementById("b");
-    // mb.addEventListener("click", handler);
-    // mb.addEventListener("click", handler2);
+    span.appendChild(document.createTextNode( " --> " ));
+
+    span.appendChild(newSubValue);
+
+    userSubsForm.appendChild(span)
 }
 
+//fuction loaded when the page finishes loading to add event listeners to things (buttons, forms, etc) so as to know when they are clicked/submitted
+window.onload=function(){
+    var substutionsForm = document.getElementById("substitutionsForm");
+    substutionsForm.addEventListener("submit", submitSubstitutions);
+
+    var domainForm = document.getElementById("domainForm");
+    console.log('domainForm: ', domainForm);
+    domainForm.addEventListener("submit", submitDomains);
+
+    var addDomain = document.getElementById("addDomain");
+    addDomain.addEventListener("click", appendBlankFormField);
+
+    var addSub = document.getElementById("addSub");
+    addSub.addEventListener("click", makeNewSub);
+
+
+}
+
+//function used to submit the pages currently configured list of substitutions back to the background script
 function submitSubstitutions(){
 
-  //TODO: collect the inputs from the inform
+    //TODO: collect the inputs from the inform
 
-  var defaultSubsToSubmit = {"subs": []};
-  var defaultFormSubsToSubmit = document.getElementById("defaultSubs");
-  //console.log(defaultFormSubsToSubmit.children);
-  var defaultFormChildren = defaultFormSubsToSubmit.children;
+    var defaultSubsToSubmit = {"subs": []};
 
-  for (var item=0; item<defaultFormChildren.length; item++){
-    //console.log(item, defaultFormChildren[item]);
-    //console.log(item, defaultFormChildren[item].children);
+    var defaultFormSubsToSubmit = document.getElementById("defaultSubs");
+    //console.log(defaultFormSubsToSubmit.children);
+    var defaultFormChildren = defaultFormSubsToSubmit.children;
+    //console.log(defaultFormChildren);
+    //var defaultFormChildren = defaultFormChildren.getElementsByTagName("label");
 
-    //TODO: maybe organize the default and user-added subs seperately, and then loop through each of them?
-    //
-    var inputItem = defaultFormChildren[item].getElementsByTagName("input")[0];
-    //console.log(inputItem);
+    //loop through each of the children elements in the default substitutions section of the form
+    for (var item=0; item<defaultFormChildren.length; item++){
+        //console.log(item, defaultFormChildren[item], defaultFormChildren[item].tagName);
+        //console.log(item, defaultFormChildren[item].children);
 
-    var tempItem = {}
+        //there are page breaks as child elements of this div, so only continue if the one being iterated on is a label, which contains a substitution
+        if (defaultFormChildren[item].tagName == "LABEL"){
 
-    tempItem["name"] = inputItem.name
-    tempItem["value"] = inputItem.value
+            var inputItem = defaultFormChildren[item].getElementsByTagName("input")[0];
+            //console.log("inputItem: ",inputItem);
 
-    console.log(tempItem["name"], tempItem["value"], inputItem.checked);
-    //TODO: need to figure out a way to store whether or not the substitution is active or not
-    if (inputItem.checked){
-      tempItem["enabled"] = true
+            var tempItem = {}
+
+            tempItem["name"] = inputItem.name
+            tempItem["value"] = inputItem.value
+
+            //console.log(tempItem["name"], tempItem["value"], inputItem.checked);
+
+            if (inputItem.checked){
+            tempItem["enabled"] = true
+            }
+            else{
+            tempItem["enabled"] = false
+            }
+            //console.log(tempItem);
+
+            //add the substitution form entry to the list to be saved
+            defaultSubsToSubmit["subs"].push(tempItem)
+
+        }
+    }
+
+    var userSubsToSubmit = {"subs": []};
+    var userFormSubsToSubmit = document.getElementById("userSubs");
+
+    var userFormChildren = userFormSubsToSubmit.children;
+    console.log("userFormChildren: ", userFormChildren);
+
+    //only continue if there are user-defined substititions to include
+    if (userFormChildren){
+        for (var item=0; item<userFormChildren.length; item++){
+            console.log(item, userFormChildren[item], userFormChildren[item].tagName);
+
+            //continue if this is an existing user-defined substitution
+            if (userFormChildren[item].tagName == "LABEL"){
+                console.log("The item was a label!");
+                if (userFormChildren[item].checked){
+                    var tempItem = {}
+
+                    var inputItem = userFormChildren[item].getElementsByTagName("input")[0];
+
+                    if (defaultFormChildren[item].tagName == "LABEL"){
+
+                        tempItem["name"] = inputItem.name
+                        tempItem["value"] = inputItem.value
+                        tempItem["enabled"] = true
+
+                        userSubsToSubmit["subs"].push(tempItem)
+                    }
+                }
+            }
+            //if this is a newly defined user-defined substitution, it needs to be parsed in a slightly different way
+            else if (userFormChildren[item].tagName == "SPAN"){
+                console.log("The item was a span!");
+
+                var tempItem = {}
+
+                var newSubName = userFormChildren[item].getElementsByTagName("input")[0];
+
+                var newSubValue = userFormChildren[item].getElementsByTagName("input")[1];
+
+                //if the user has filled out both required fields TODO: make the user fill out both requireed fields
+                if (newSubName.value || newSubValue.value){
+                    tempItem["name"] = newSubName.value
+                    tempItem["value"] = newSubValue.value
+                    tempItem["enabled"] = true
+                    userSubsToSubmit["subs"].push(tempItem)
+                }
+            }
+        }
     }
     else{
-      tempItem["enabled"] = false
+        userSubsToSubmit = null
     }
-    console.log(tempItem);
 
-
-    defaultSubsToSubmit["subs"].push(tempItem)
-
-  }
-
-  var userSubsToSubmit;
-  var userFormSubsToSubmit = document.getElementById("userSubs");
-
-  var userFormChildren = userFormSubsToSubmit.children;
-  if (userFormChildren > 0){
-    for (var item=0; item<userFormChildren.length; item++){
-      console.log(item, userFormChildren[item]);
-
-      //TODO: maybe organize the default and user-added subs seperately, and then loop through each of them?
-
-
-
-    }
-  }
-  else{
-    userSubsToSubmit = null
-  }
-
-
-  chrome.runtime.sendMessage({submitSubstitutions: true, defaultSubsToSubmit: defaultSubsToSubmit, userSubsToSubmit: userSubsToSubmit}, function(response) {
+    //submit the list currently configured list of substitutions to the background script
+    chrome.runtime.sendMessage({submitSubstitutions: true, defaultSubsToSubmit: defaultSubsToSubmit, userSubsToSubmit: userSubsToSubmit}, function(response) {
 
     //console.log('the response inside was: ', substitutionList);
     subsSubmitted = response.subsSubmitted;
+
     if (subsSubmitted){
-      console.log('The substituions list was updated!');
+        console.log('The substituions list was updated!');
     }
     else{
-      console.log('The substituions list was unable to be updated!');
+        console.log('The substituions list was unable to be updated!');
     }
 
 
-  });
+    });
 
 }
 
-
+//function for submitting the list of configured domains that this extension should run on
 function submitDomains(){
 
-  var domainsToSubmit = []
-  var formDomainsToSubmit = document.getElementById("domainFormInputs");
+    var domainsToSubmit = []
+    var formDomainsToSubmit = document.getElementById("domainFormInputs");
 
-  //var domainFormChildren = formDomainsToSubmit.children;
+    //var domainFormChildren = formDomainsToSubmit.children;
 
-  var domainFormChildren = formDomainsToSubmit.getElementsByTagName("input");
-  //console.log(formDomainsToSubmit.children);
-  //console.log(domainFormChildren);
+    var domainFormChildren = formDomainsToSubmit.getElementsByTagName("input");
+    //console.log(formDomainsToSubmit.children);
+    //console.log(domainFormChildren);
 
-  for (var item=0; item<domainFormChildren.length; item++){
+    for (var item=0; item<domainFormChildren.length; item++){
 
-    //console.log(domainFormChildren[item].value);
+        //console.log(domainFormChildren[item].value);
 
-    //console.log(typeof domainFormChildren[item].value);
-    //console.log(domainsToSubmit);
-    domainsToSubmit.push(domainFormChildren[item].value)
-    //var inputItem = domainFormChildren[item];
+        //console.log(typeof domainFormChildren[item].value);
+        //console.log(domainsToSubmit);
+        domainsToSubmit.push(domainFormChildren[item].value)
 
-    // var tempItem = {}
-    //
-    // tempItem["name"] = inputItem.name
-    // tempItem["value"] = inputItem.value
-    //
-    // console.log(tempItem["name"], tempItem["value"], inputItem.checked);
-    // //TODO: need to figure out a way to store whether or not the substitution is active or not
-    // if (inputItem.checked){
-    //   tempItem["enabled"] = true
-    // }
-    // else{
-    //   tempItem["enabled"] = false
-    // }
-    // console.log(tempItem);
-    //
-    //
-    // defaultSubsToSubmit["subs"].push(tempItem)
+    }
 
+    console.log(domainsToSubmit);
 
-
-  }
-
-
-
-
-  console.log(domainsToSubmit);
-
-  chrome.runtime.sendMessage({submitDomains: true, domainsToSubmit: domainsToSubmit}, function(response) {
+    chrome.runtime.sendMessage({submitDomains: true, domainsToSubmit: domainsToSubmit}, function(response) {
 
     //console.log('the response inside was: ', substitutionList);
+
+    //process the response from the domain submission background script, indicating whether or not the save was successful
     domainsSubmitted = response.domainsSubmitted;
     if (domainsSubmitted){
-      console.log('The domain list was updated!');
+        console.log('The domain list was updated!');
     }
     else{
-      console.log('The domain list was unable to be updated!');
+        console.log('The domain list was unable to be updated!');
     }
 
 
-  });
+    });
 }
 
-// function openSubTab(){
-//   openTab(document.getElementById("subsTab"));
-// }
-//
-// function openDomainTab(){
-//   openTab(document.getElementById("domainsTab"));
-// }
-//
-// function openTab(tabContentName) {
-//     console.log(tabContentName);
-//     var i, tabcontent, tablinks;
-//     tabcontent = document.getElementsByClassName("tabcontent");
-//     for (i = 0; i < tabcontent.length; i++) {
-//         tabcontent[i].style.display = "none";
-//     }
-//     tablinks = document.getElementsByClassName("tablink");
-//     for (i = 0; i < tablinks.length; i++) {
-//         tablinks[i].style.backgroundColor = "";
-//     }
-//     console.log(document.getElementById(tabContentName.value));
-//     document.getElementById(tabContentName.value).style.display = "block";
-//     tabContentName.style.backgroundColor = "#555";
-//     //document.getElementById(tabContentName.value).style.backgroundColor = "#555";
-//
-// }
-// Get the element with id="defaultOpen" and click on it
-//document.getElementsByClassName("defaultOpen")[0].click();
+function resetSubList(){
 
-// document.getElementById("subsTab").click();
-//
-// var substitutionsForm = document.getElementById("substitutionsForm");
-//
-// subListForInputs = getSubstitutionList()
-//
-// console.log("subListForInputs: ", subListForInputs)
-// console.log("substitutionList after subListForInputs: ", substitutionList)
-//
-// for (var item in subListForInputs){
-//   console.log(item, subListForInputs[item])
-//   document.write(item);
-//   substitutionsForm.appendChild(makeRadioButton(item, subListForInputs[item]));
-//
-// }
+}
