@@ -156,7 +156,7 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (request.getDomainList){
-      var defaultDomainList = ["https://hayward-workspace-hpeirce.c9users.io/test/words.html", "https://www.cbc.ca"]
+      var defaultDomainList = ["https://hayward-workspace-hpeirce.c9users.io/test/words.html", "https://hayward-workspace-hpeirce.c9users.io/*", "https://hayward-workspace-hpeirce.c9users.io/\*/words.html", "https://hayward-workspace-hpeirce.c9users.io/?hello=world", "https://www.cbc.ca"]
 
       if (typeof localStorage['domainList'] !== 'undefined') {
         console.log("Found existing substitution data");

@@ -18,8 +18,6 @@ var substitutions = {
   "could not be reached for comment": " is guilty and everyone knows it"
 }
 
-//TODO: load a URL parsing library here
-
 chrome.runtime.sendMessage({getDomainList: true}, function(response) {
 
   domainListForInputs = response.domainList;
@@ -29,8 +27,6 @@ chrome.runtime.sendMessage({getDomainList: true}, function(response) {
     console.log('domainListForInputs[item]: ',domainListForInputs[item])
 
     console.log('location.href: ',location.href)
-
-    //TODO process href and domain from list so they can be properly compared
 
     //check if this domain matches the entry in the list
     if (domainCheck(domainListForInputs[item], location.href)){
@@ -107,26 +103,113 @@ chrome.runtime.sendMessage({getDomainList: true}, function(response) {
   }
 });
 
+
+
+//function written by Cory Laviska: https://www.abeautifulsite.net/parsing-urls-in-javascript
+function parseURL(url) {
+    var parser = document.createElement('a'),
+        searchObject = {},
+        queries, split, i;
+    // Let the browser do the work
+    parser.href = url;
+    // Convert query string to object
+    queries = parser.search.replace(/^\?/, '').split('&');
+    for( i = 0; i < queries.length; i++ ) {
+        split = queries[i].split('=');
+        searchObject[split[0]] = split[1];
+    }
+    return {
+        protocol: parser.protocol,
+        host: parser.host,
+        hostname: parser.hostname,
+        port: parser.port,
+        pathname: parser.pathname,
+        search: parser.search,
+        searchObject: searchObject,
+        hash: parser.hash
+    };
+}
+
+//function written by Joshua Clanton: http://adripofjavascript.com/blog/drips/object-equality-in-javascript.html
+function isEquivalent(a, b) {
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+}
+
 function domainCheck(listEntry, pageURL){
 
-    // //run through each of the checks, if any of them fail return false, otherwise at the end return true
-    //
-    // //TODO: remove the protocols
-    // if (listEntry.includes("://")){
-    //     listEntry = listEntry.split("://")[1];
-    // }
-    // if (pageURL.includes("://")){
-    //     pageURL = pageURL.split("://")[1];
-    // }
-    //
-    // //TODO: remove parameters from href if not included in domain from addListener
-    // //TODO: what about strixes in URLs, how to treat them as wildcards
-    //
-    // else return true;
+    parsedListDomain = parseURL(listEntry);
+    console.log(parsedListDomain);
 
-    if (domainListForInputs[item] == location.href){
-        return true;
+    parsedThisDomain = parseURL(pageURL);
+    console.log(parsedThisDomain);
+
+    //TODO: check for wildcards in hostname
+
+    //check that the both hostnames end the same way to account for a specified subdomain in the list URL
+    if (!parsedThisDomain.hostname.endsWith(parsedListDomain.hostname)){
+        return false;
     }
-    else return false;
+
+
+    //if the list domain has a path, check the the current domain has the same path
+    if (parsedListDomain.pathname != "/"){
+
+        //if the list domain's path is not just a wildcard (which will just let it move on)
+        if (parsedListDomain.pathname != "/*"){
+
+            //TODO: need to check for wildcards in the middle of the path
+
+            //if the domain's paths don't match, but they should
+            if (parsedListDomain.pathname != parsedThisDomain.pathname){
+                return false;
+            }
+        }
+    }
+
+    //TODO: check for explicitly included query string parameters in list entry
+
+    //if there are UTM parameters in the list domain
+    if (parsedListDomain.searchObject){
+        console.log("the domain has a search object");
+
+        console.log("URL isEquivalent check: ", isEquivalent(parsedListDomain.searchObject, parsedThisDomain.searchObject));
+
+        //TODO: is the following check accounting for a list domain that only requires some, but not all the parameters from the current domain?
+        //if the two URLs don't share the same set of UTM parameters, and should
+        if (!isEquivalent(parsedListDomain.searchObject, parsedThisDomain.searchObject)){
+            return false;
+        }
+    }
+
+    // //basic "are the domains the same" check
+    // if (listEntry == pageURL){
+    //     return true;
+    // }
+    // else return false;
+
+    //if nothing has returned false by this point, then we can safely say that the domains are the same
+    return true;
 
 }
