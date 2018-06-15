@@ -1,6 +1,6 @@
 {
   "name": "Substitutions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Substitute text in your browser to make reading the news more fun. Inspired by XKCD comic [1288](https://xkcd.com/1288/).",
   "icons": {
     "16": "images/subs16.png",

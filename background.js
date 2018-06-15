@@ -1,3 +1,104 @@
+var defaultSubstitutionList = {
+  "subs":[
+    {
+      "name": "witnesses",
+      "value": "these dudes I know",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "allegedly",
+      "value": "kinda probably",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "new study",
+      "value": "tumblr post",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "rebuild",
+      "value": "avenge",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "space",
+      "value": "spaaace",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "google glass",
+      "value": "virtual boy",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "smartphone",
+      "value": "Pokédex",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "electric",
+      "value": "atomic",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "senator",
+      "value": "elf-lord",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "car",
+      "value": "cat",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "election",
+      "value": "eating contest",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "congressional leaders",
+      "value": "river spirits",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "homeland security",
+      "value": "homestar runner",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "could not be reached for comment",
+      "value": "is guilty and everyone knows it",
+      "enabled": true,
+      "list": 1
+    },
+    {
+      "name": "debate",
+      "value": "dance-off",
+      "enabled": true,
+      "list": 2
+    },
+    {
+      "name": "gaffe",
+      "value": "magic spell",
+      "enabled": true,
+      "list": 3
+    }
+]}
+
+var defaultDomainList = ["https://hayward-workspace-hpeirce.c9users.io/test/words.html", "https://hayward-workspace-hpeirce.c9users.io/*", "https://hayward-workspace-hpeirce.c9users.io/\*/words.html", "https://hayward-workspace-hpeirce.c9users.io/?hello=world", "https://www.cbc.ca"]
 
 
 chrome.runtime.onMessage.addListener(
@@ -39,79 +140,7 @@ chrome.runtime.onMessage.addListener(
       //   "could not be reached for comment": " is guilty and everyone knows it"
       // }
 
-      var defaultSubstitutionList = {
-        "subs":[
-          {
-            "name": "witnesses",
-            "value": "these dudes I know",
-            "enabled": true
-          },
-          {
-            "name": "allegedly",
-            "value": "kinda probably",
-            "enabled": true
-          },
-          {
-            "name": "new study",
-            "value": "tumblr post",
-            "enabled": true
-          },
-          {
-            "name": "rebuild",
-            "value": "avenge",
-            "enabled": true
-          },
-          {
-            "name": "space",
-            "value": "spaaace",
-            "enabled": true
-          },
-          {
-            "name": "google glass",
-            "value": "virtual boy",
-            "enabled": true
-          },
-          {
-            "name": "smartphone",
-            "value": "Pokédex",
-            "enabled": true
-          },
-          {
-            "name": "electic",
-            "value": "atomic",
-            "enabled": true
-          },
-          {
-            "name": "senator",
-            "value": "elf-lord",
-            "enabled": true
-          },
-          {
-            "name": "car",
-            "value": "cat",
-            "enabled": true
-          },
-          {
-            "name": "election",
-            "value": "eating contest",
-            "enabled": true
-          },
-          {
-            "name": "congressional leaders",
-            "value": "river spirits",
-            "enabled": true
-          },
-          {
-            "name": "homeland security",
-            "value": "homestar runner",
-            "enabled": true
-          },
-          {
-            "name": "could not be reached for comment",
-            "value": "is guilty and everyone knows it",
-            "enabled": true
-          }
-      ]}
+
 
       //check if there is already data configured for the substitution words. Return this existing list
       if (typeof localStorage['defaultSubsList'] !== 'undefined' && typeof localStorage['userSubsList'] !== 'undefined') {
@@ -156,7 +185,6 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (request.getDomainList){
-      var defaultDomainList = ["https://hayward-workspace-hpeirce.c9users.io/test/words.html", "https://hayward-workspace-hpeirce.c9users.io/*", "https://hayward-workspace-hpeirce.c9users.io/\*/words.html", "https://hayward-workspace-hpeirce.c9users.io/?hello=world", "https://www.cbc.ca"]
 
       if (typeof localStorage['domainList'] !== 'undefined') {
         console.log("Found existing substitution data");

@@ -25,23 +25,24 @@ function getSubstitutionList(){
         var defaultSubstitutions = document.getElementById("defaultSubs");
 
         for (var item in defaultSubListForInputs){
-          //console.log(defaultSubListForInputs[item])
+            //console.log(defaultSubListForInputs[item])
 
+            defaultSubstitutions.appendChild(makeRadioButton(defaultSubListForInputs[item].name, defaultSubListForInputs[item].value, defaultSubListForInputs[item].enabled, defaultSubListForInputs[item].list));
 
-          //document.write(item,'<br>');
-          defaultSubstitutions.appendChild(makeRadioButton(defaultSubListForInputs[item].name, defaultSubListForInputs[item].value, defaultSubListForInputs[item].enabled));
-          linebreak = document.createElement("br");
-          defaultSubstitutions.appendChild(linebreak);
+            //document.write(item,'<br>');
+
+            linebreak = document.createElement("br");
+            defaultSubstitutions.appendChild(linebreak);
         }
 
         var userSubstitutions = document.getElementById("userSubs");
 
         for (var item in userSubListForInputs){
-          //console.log(userSubListForInputs[item])
+            //console.log(userSubListForInputs[item])
 
-          userSubstitutions.appendChild(makeRadioButton(userSubListForInputs[item].name, userSubListForInputs[item].value, userSubListForInputs[item].enabled));
-          linebreak = document.createElement("br");
-          userSubstitutions.appendChild(linebreak);
+            userSubstitutions.appendChild(makeRadioButton(userSubListForInputs[item].name, userSubListForInputs[item].value, userSubListForInputs[item].enabled));
+            linebreak = document.createElement("br");
+            userSubstitutions.appendChild(linebreak);
         }
     });
 }
@@ -105,13 +106,14 @@ function appendBlankFormField() {
 }
 
 //function used to create a new radio button
-function makeRadioButton(name, value, enabled) {
+function makeRadioButton(name, value, enabled, data) {
 
     var label = document.createElement("label");
     var radio = document.createElement("input");
     radio.type = "checkbox";
     radio.name = name;
     radio.value = value;
+    radio.dataset.list = data;
 
     radio.classList.add("checkbox_input");
 
@@ -174,6 +176,11 @@ window.onload=function(){
     addSub.addEventListener("click", makeNewSub);
 
 
+    var otherSettingsForm = document.getElementById("otherSettingsForm");
+    console.log('otherSettingsForm: ', otherSettingsForm);
+    domainForm.addEventListener("submit", submitOtherSettings);
+
+
 }
 
 //function used to submit the pages currently configured list of substitutions back to the background script
@@ -213,6 +220,7 @@ function submitSubstitutions(){
             else{
             tempItem["enabled"] = false
             }
+            tempItem["list"] = inputItem.dataset.list;
             //console.log(tempItem);
 
             //add the substitution form entry to the list to be saved
@@ -334,5 +342,10 @@ function submitDomains(){
 }
 
 function resetSubList(){
+
+}
+
+
+function submitOtherSettings(){
 
 }
