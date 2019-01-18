@@ -12,29 +12,46 @@ function logger(content){
 
 
 
-//var keywords = {"test":"test1", "and":"and1", "the":"the1", "permission":"permission1"}
-// var substitutions = {
-//   "witnesses": "these dudes I know",
-//   "allegedly": "kinda probably",
-//   "new study": "tumblr post",
-//   "rebuild": "avenge",
-//   "space": "spaaace",
-//   "google glass": "virtual boy",
-//   "smartphone": "Pokédex",
-//   "electric": "atomic",
-//   "senator": "elf-lord",
-//   "car": "cat",
-//   "election": "eating contest",
-//   "congressional leaders": "river spirits",
-//   "homeland security": "homestar runner",
-//   "could not be reached for comment": " is guilty and everyone knows it"
-// }
 
-var substitutionCount = 0;
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//
+//         //if the subs list has been updated, and the page subs should be refreshed
+//         if( request.refreshSubs === true ) {
+//             console.log("should refresh")
+//             runSubstitutions();
+//         }
+//     }
+// );
+
+chrome.runtime.onMessage.addListener(msgObj => {
+    // do something with msgObj
+    if( msgObj.refreshSubs === true ) {
+        console.log("should refresh")
+        runSubstitutions();
+    }
+    if( msgObj.message === "start" ) {
+        console.log("should start")
+        //runSubstitutions();
+    }
+});
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+      if (request.message){
+          console.log("should start")
+      }
+  }
+);
 
 runSubstitutions();
 
 function runSubstitutions(changedElements = null){
+
+    //TODO: only clear this value if this script is running on page load, otherise append new entries. Maybe if `changedElements` is null? maybe need to retrieve the value from somewhere if not new
+    if (!changedElements){
+        var substitutionCount = 0;
+    }
 
     chrome.runtime.sendMessage({getDomainList: true}, function(response) {
 
@@ -49,17 +66,12 @@ function runSubstitutions(changedElements = null){
             //check if this domain matches the entry in the list
             if (domainCheck(domainListForInputs[item], location.href)){
 
-                //TODO: get all elements on the page which contain text (not just the top level)
-
                 if (changedElements){
                     elements = changedElements;
                 }
                 else{
                     elements = document.querySelectorAll("h1, h2, h3, h4, h4, h5, p")
                 }
-
-
-
 
                 chrome.runtime.sendMessage({getSubstitutionList: true}, function(response) {
 
@@ -282,6 +294,7 @@ function isEquivalent(a, b) {
     // are considered equivalent
     return true;
 }
+
 
 function domainCheck(listEntry, pageURL){
 

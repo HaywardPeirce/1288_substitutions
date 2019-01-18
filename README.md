@@ -3,7 +3,7 @@ A Google Chrome extension for substituting words in webpages. Inspired by [XKCD 
 
 ### TODO
 - ~~Re-do substitutions when content on the page is reloaded~~
-- Re-do substitutions when sub list is updated/saved.
+- ~~Re-do substitutions when sub list is updated/saved. message passing from popup to content script?~~
     - what about tabs in the background?
 - ~~Include nested elements to be substituted~~ already covered by selecting elements by CSS selector (rather than just top level elements by tag)
 - ~~Create a form for user to include their own words to substitute~~

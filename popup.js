@@ -162,7 +162,10 @@ function makeNewSub(){
 
 //fuction loaded when the page finishes loading to add event listeners to things (buttons, forms, etc) so as to know when they are clicked/submitted
 window.onload=function(){
-    var substutionsForm = document.getElementById("substitutionsForm");
+    var substutionsForm = document.getElementById("defaultSubstitutionsForm");
+    substutionsForm.addEventListener("submit", submitSubstitutions);
+
+    var substutionsForm = document.getElementById("userSubstitutionsForm");
     substutionsForm.addEventListener("submit", submitSubstitutions);
 
     var domainForm = document.getElementById("domainForm");
@@ -253,7 +256,7 @@ function submitSubstitutions(){
                         tempItem["name"] = inputItem.name
                         tempItem["value"] = inputItem.value
                         tempItem["enabled"] = true
-
+                        //console.log("tempItem: ",tempItem);
                         userSubsToSubmit["subs"].push(tempItem)
                     }
                 }
@@ -277,10 +280,13 @@ function submitSubstitutions(){
                 }
             }
         }
+        //console.log(userSubsToSubmit)
     }
     else{
         userSubsToSubmit = null
     }
+
+
 
     //submit the list currently configured list of substitutions to the background script
     chrome.runtime.sendMessage({submitSubstitutions: true, defaultSubsToSubmit: defaultSubsToSubmit, userSubsToSubmit: userSubsToSubmit}, function(response) {
@@ -289,6 +295,33 @@ function submitSubstitutions(){
     subsSubmitted = response.subsSubmitted;
 
     if (subsSubmitted){
+
+
+        //send a message to the active tab to refresh the substitutions when the list was updated
+        // chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+        //     var activeTab = tabs[0];
+        //     console.log("activeTab: ", activeTab)
+        //     chrome.tabs.sendMessage(activeTab.id, {"refreshSubs": true});
+        // });
+
+        //send a message to the all tabs telling them to refresh the substitutions when the list was updated
+        chrome.tabs.query({}, function(tabs) {
+            var message = {"refreshSubs": true};
+            for (var i=0; i<tabs.length; ++i) {
+                chrome.tabs.sendMessage(tabs[i].id, message, function(response){
+                    console.log('refreshing tab ', tabs[i].id);
+                    //$("#text").text(response);
+                });
+            }
+        });
+
+        chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+            var activeTab = tabs[0];
+            console.log('refreshing tab ', activeTab.id);
+            chrome.tabs.sendMessage(activeTab.id, {"message": "start"});
+        });
+
+
         console.log('The substituions list was updated!');
     }
     else{
@@ -326,17 +359,16 @@ function submitDomains(){
 
     chrome.runtime.sendMessage({submitDomains: true, domainsToSubmit: domainsToSubmit}, function(response) {
 
-    //console.log('the response inside was: ', substitutionList);
+        //console.log('the response inside was: ', substitutionList);
 
-    //process the response from the domain submission background script, indicating whether or not the save was successful
-    domainsSubmitted = response.domainsSubmitted;
-    if (domainsSubmitted){
-        console.log('The domain list was updated!');
-    }
-    else{
-        console.log('The domain list was unable to be updated!');
-    }
-
+        //process the response from the domain submission background script, indicating whether or not the save was successful
+        domainsSubmitted = response.domainsSubmitted;
+        if (domainsSubmitted){
+            console.log('The domain list was updated!');
+        }
+        else{
+            console.log('The domain list was unable to be updated!');
+        }
 
     });
 }

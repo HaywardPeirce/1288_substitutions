@@ -19,6 +19,9 @@
     .text_input {
       width: 100%;
     }
+    #defaultSubs{
+        overflow: auto;
+    }
 
   </style>
 </head>
@@ -27,19 +30,38 @@
 <script src="popup.js"></script>
 <div class="container">
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#subsContent">Substitutions</a></li>
+    <li class="active"><a data-toggle="tab" href="#subsContent">Substitutions</a>
+
+    </li>
     <li><a data-toggle="tab" href="#domainsContent">Domains</a></li>
     <li><a data-toggle="tab" href="#other">Other</a></li>
   </ul>
 
   <div class="tab-content">
     <div id="subsContent" class="tab-pane fade in active">
-      <form id="substitutionsForm">
-        <div id="defaultSubs"></div>
-        <hr>
-        <div id="userSubs"></div><button type="button" id="addSub">Add Substitution</button>
-        <input type="submit">
-      </form>
+
+        <div class="tab-content">
+            <ul class="nav nav-tabs">
+                <li><a data-toggle="tab" href="#defaultSubsContent">Default Subs</a></li>
+                <li><a data-toggle="tab" href="#userSubsContent">Manual Subs</a></li>
+                <li><a data-toggle="tab" href="#remoteSubsContent">Remote Subs</a></li>
+            </ul>
+
+            <div id="defaultSubsContent" class="tab-pane fade in active">
+                <form id="defaultSubstitutionsForm">
+                    <div id="defaultSubs"></div>
+                    <input type="submit">
+                </form>
+            </div>
+            <div id="userSubsContent" class="tab-pane fade">
+                <form id="userSubstitutionsForm">
+                    <div id="userSubs"></div><button type="button" id="addSub">Add Substitution</button>
+                    <input type="submit">
+                </form>
+            </div>
+            <div id="remoteSubsContent" class="tab-pane fade">
+            </div>
+        </div>
     </div>
     <div id="domainsContent" class="tab-pane fade">
       <form id="domainForm">
